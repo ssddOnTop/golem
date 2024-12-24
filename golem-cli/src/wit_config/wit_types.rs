@@ -39,6 +39,31 @@ pub enum WitType {
     FieldTy(String) // Custom type to resolve field types
 }
 
+pub mod well_known {
+    use crate::wit_config::wit_types::WitType;
+
+    pub fn grpc_errors() -> WitType {
+        WitType::Variant(vec![
+            ("Cancelled".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("Unknown".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("InvalidArgument".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("DeadlineExceeded".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("NotFound".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("AlreadyExists".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("PermissionDenied".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("ResourceExhausted".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("FailedPrecondition".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("Aborted".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("OutOfRange".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("Unimplemented".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("Internal".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("Unavailable".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("DataLoss".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+            ("Unauthenticated".to_string(), Some(WitType::Option(Box::new(WitType::String)))),
+        ])
+    }
+}
+
 impl WitType {
     pub fn from_primitive_proto_type(proto_ty: &str) -> Valid<Self, anyhow::Error, anyhow::Error> {
         let binding = proto_ty.to_lowercase();

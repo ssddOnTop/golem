@@ -5,11 +5,11 @@ expression: config.to_wit()
 package api:todos@1.0.0;
 
 interface address-service {
-    use %type.{address, get-user-request, user};
+    use %type.{address, get-user-request, user, grpc-errors};
     
     
-    add-address: func(input: address) -> option<address>;
-    get-address-for-user: func(input: user) -> option<address>;
+    add-address: func(input: address) -> result<address, grpc-errors>;
+    get-address-for-user: func(input: user) -> result<address, grpc-errors>;
 }
 
 interface %type {
@@ -17,14 +17,14 @@ interface %type {
     record address { city: string, street: string, user: user, zip-code: string }
     record get-user-request { id: string }
     record user { email: string, id: string, name: string }
-    
+    variant grpc-errors { cancelled(option<string>), unknown(option<string>), invalid-argument(option<string>), deadline-exceeded(option<string>), not-found(option<string>), already-exists(option<string>), permission-denied(option<string>), resource-exhausted(option<string>), failed-precondition(option<string>), aborted(option<string>), out-of-range(option<string>), unimplemented(option<string>), internal(option<string>), unavailable(option<string>), data-loss(option<string>), unauthenticated(option<string>) }
     
 }
 
 interface user-service {
-    use %type.{address, get-user-request, user};
+    use %type.{address, get-user-request, user, grpc-errors};
     
     
-    get-user: func(input: get-user-request) -> option<user>;
-    create-user: func(input: user) -> option<user>;
+    get-user: func(input: get-user-request) -> result<user, grpc-errors>;
+    create-user: func(input: user) -> result<user, grpc-errors>;
 }

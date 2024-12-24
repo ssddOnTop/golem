@@ -238,7 +238,7 @@ impl WitType {
                     .iter()
                     .map(|(name, ty)| {
                         if let Some(ty) = ty {
-                            format!("{}: {}", generate_wit_name(name), ty.to_wit(None))
+                            format!("{}({})", generate_wit_name(name), ty.to_wit(None))
                         } else {
                             generate_wit_name(name)
                         }

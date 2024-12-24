@@ -4,6 +4,7 @@ use convert_case::Case;
 use convert_case::Casing;
 use protox::prost_reflect::prost_types::{DescriptorProto, EnumDescriptorProto, FileDescriptorSet};
 use tailcall_valid::{Valid, Validator};
+use crate::proto::DEFAULT_INTERFACE_NAME;
 
 use crate::wit_config::config::{WitConfig, Field, Interface, Record};
 use crate::wit_config::wit_types::WitType;
@@ -61,7 +62,7 @@ pub fn handle_types(config: WitConfig, proto: &[FileDescriptorSet], package: Str
         })
             .and_then(|_| {
                 Valid::succeed(Interface {
-                    name: "type".to_string(),
+                    name: DEFAULT_INTERFACE_NAME.to_string(),
                     varients: map,
                     records,
                     ..Default::default()

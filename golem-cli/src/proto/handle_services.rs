@@ -5,7 +5,7 @@ use crate::wit_config::config::{WitConfig, Function, Interface, Parameter, Retur
 use convert_case::Casing;
 use crate::proto::proto::process_ty;
 
-fn handle_service(config: &WitConfig, services: &[ServiceDescriptorProto]) -> Valid<Vec<Interface>, anyhow::Error, anyhow::Error> {
+fn handle_service(config: &WitConfig, services: &[ServiceDescriptorProto], error_type: Option<String>) -> Valid<Vec<Interface>, anyhow::Error, anyhow::Error> {
     Valid::from_iter(services.iter(), |service| {
         let name = service.name().to_case(Case::Kebab);
         Valid::from_iter(service.method.iter(), |method| {
@@ -26,9 +26,7 @@ fn handle_service(config: &WitConfig, services: &[ServiceDescriptorProto]) -> Va
                 let mut parameters = vec![];
                 let mut return_type = ReturnTy {
                     return_type: "unit".to_string(),
-
-                    // TODO: I am not yet sure about error type
-                    error_type: None,
+                    error_type: error_type.clone(),
                 };
                 if let Some(a) = a {
                     // Protobuf only supports one input parameter,
@@ -72,12 +70,12 @@ fn handle_service(config: &WitConfig, services: &[ServiceDescriptorProto]) -> Va
     })
 }
 
-pub fn handle_services(config: WitConfig, proto: &[FileDescriptorSet]) -> Valid<WitConfig, anyhow::Error, anyhow::Error> {
+pub fn handle_services(config: WitConfig, proto: &[FileDescriptorSet], error_type: Option<String>) -> Valid<WitConfig, anyhow::Error, anyhow::Error> {
     Valid::succeed(config)
         .and_then(|mut config| {
             Valid::from_iter(proto.iter(), |file| {
                 Valid::from_iter(file.file.iter(), |file| {
-                    handle_service(&config, &file.service)
+                    handle_service(&config, &file.service, error_type.clone())
                 })
                     .and_then(|interfaces| {
                         config.interfaces.extend(interfaces.into_iter().flatten().collect::<Vec<_>>());
