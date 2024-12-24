@@ -1,0 +1,22 @@
+---
+source: golem-cli/src/openapi/openapi_spec.rs
+expression: v.to_wit()
+---
+package api:todos@1.0.0;
+
+interface types {
+    
+    record error { error: error-error }
+    record error-error { code: string, details: list<error-error-details>, message: string }
+    record error-error-details { field: string, message: string }
+    record todo { completed: bool, created-at: string, description: string, due-date: string, id: string, title: string, updated-at: string, user-id: string }
+    record todo-create { description: string, due-date: string, title: string, user-id: string }
+    record todo-list { data: list<todo-list-data>, metadata: todo-list-metadata }
+    record todo-list-data { completed: bool, created-at: string, description: string, due-date: string, id: string, title: string, updated-at: string, user-id: string }
+    record todo-list-metadata { limit: s32, %offset: s32, total: s32 }
+    record todo-response { data: todo-response-data }
+    record todo-response-data { completed: bool, created-at: string, description: string, due-date: string, id: string, title: string, updated-at: string, user-id: string }
+    record todo-update { completed: bool, description: string, due-date: string, title: string }
+    
+    
+}

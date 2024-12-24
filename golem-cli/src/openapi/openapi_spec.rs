@@ -292,14 +292,18 @@ impl OpenApiSpec<Unresolved> {
 }
 
 #[cfg(test)]
+test_r::enable!();
+
+#[cfg(test)]
 mod test {
+    use test_r::test;
     use tailcall_valid::Validator;
     use wit_parser::Resolve;
     use crate::openapi::openapi_spec::OpenApiSpec;
 
     #[test]
     fn test_from_openapi() {
-        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/openapi/fixtures/openapi_todos.yaml");
+        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/src/openapi/fixtures/openapi_todos.yml");
         let content = std::fs::read_to_string(path).unwrap();
 
         let y: OpenApiSpec = serde_yaml::from_str(&content).unwrap();

@@ -95,7 +95,11 @@ impl WitType {
 }
 
 #[cfg(test)]
+test_r::enable!();
+
+#[cfg(test)]
 mod tests {
+    use test_r::test;
     use std::collections::HashMap;
     use crate::openapi::openapi_spec::Components;
     use super::*;
@@ -104,7 +108,7 @@ mod tests {
     fn test_ref_resolution() {
         let mut schemas = HashMap::new();
         schemas.insert(
-            "ReferencedSchema".to_string(),
+            "referenced-schema".to_string(),
             Schema {
                 type_: Some("string".to_string()),
                 ..Default::default()
@@ -132,7 +136,7 @@ mod tests {
     fn test_array_with_ref() {
         let mut schemas = HashMap::new();
         schemas.insert(
-            "ReferencedSchema".to_string(),
+            "referenced-schema".to_string(),
             Schema {
                 type_: Some("string".to_string()),
                 ..Default::default()
@@ -189,7 +193,13 @@ mod tests {
 
         let result = WitType::from_schema(&schema, &openapi).to_result().unwrap();
         assert_eq!(
-            result,
+            match result {
+                WitType::Record(mut fields) => {
+                    fields.sort_by(|(a,_), (b,_)| a.cmp(b));
+                    WitType::Record(fields)
+                },
+                _ => panic!("Expected Record type")
+            },
             WitType::Record(vec![
                 ("id".to_string(), WitType::S32),
                 ("name".to_string(), WitType::String),

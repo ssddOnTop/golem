@@ -32,7 +32,11 @@ pub fn process_ty(name: &str) -> Valid<WitType, anyhow::Error, anyhow::Error> {
 }
 
 #[cfg(test)]
-mod test {
+test_r::enable!();
+
+#[cfg(test)]
+mod tests {
+    use test_r::test;
     use tailcall_valid::Validator;
     use wit_parser::Resolve;
     use crate::proto::proto::Proto;
